@@ -1,0 +1,146 @@
+---
+title: "Industrial Labour Accidents"
+author:
+- Anjan Mondal
+- MDS202208
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
+subtitle: Visualisation Analytics Report
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(fig.width=8, fig.height=4)
+library("dplyr")
+library(ggplot2)
+library(RColorBrewer)
+library(gridExtra)
+ind_data=read.csv("F:/Projects/IHM/IHMStefanini_industrial_safety_and_health_database.csv")
+ind_data <- ind_data %>% 
+        rename("Date" = "Data",
+               "Sector" = "Industry.Sector",
+               "Level" = "Accident.Level",
+               "Gender"="Genre",
+               "Type"="Employee.ou.Terceiro",
+               "Potential.Level"="Potential.Accident.Level")
+
+```
+
+# Introduction
+
+Founded in 1994 as a systems, instrumentation, electrical and Industrial IT integrator, ihm has been expanding its activities over the years. Becoming part of the Stefanini group in 2015, in what formed the largest LATAM operational technology company, today it operates in the entire industry vertical: from the assembly of panels and electrocentres to the use of disruptive technologies and mindset change for digital transformation, going through automation, electrical and IT projects.
+
+With such diverse Industrial activities, some accidents are bound to happen within the facilities. Presented here is an analysis of the accidents and their various aspects. It is hoped that this report would give an overview to the various aspects of the accidents and provide an insight towards mitigating them.
+
+# About the Dataset
+
+The data set contains records of accidents from 12 plants in 3 different countries of the ihm Stefanini coroporation. Every row in the data set represents a single incident of accident. Each row has the following attributes:
+
+-   Date: Time stamp
+-   Countries: Country of accident (anonymized)
+-   Local: City of Accident (anonymized)
+-   Industry Sector: Industrial Sector of the plant
+-   Accident Level: (I to VI) Severity of accident (I $\rightarrow$ Not Severe & VI $\rightarrow$ Very Severe)
+-   Potential Accident Level: How bad the accident could have been (due to other factors involved in the accident)
+-   Gender: Gender of the employee involved with the accident (Male or Female)
+-   Employee or Third Party: If the injured person is an employee or third party
+-   Critical Risk: Some description of the risk involved in the accident
+
+# Accidents according to Countries
+
+First let us take a look at the locations of accidents.
+
+-   Graph (a) shows the country-wise count of accidents cumulatively over the time period recorded in the dataset.
+
+-   Graph (b) shows the country-wise and city-wise counts of accidents cumulatively over the time period.This graph also gives an idea of the number of factory locations in each country.
+
+-   Graph (c) Shows the country-wise distribution of industries and their accident frequencies.
+
+-   Graph (d) Shows us the industrial accidents according to a location and we see that there is only one factory at a particular locale.
+
+```{r}
+
+
+ggplot(ind_data)+aes(x=Countries)+
+geom_bar(width=.5,aes(fill=Countries))+labs(title="(a)")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+scale_fill_brewer(palette="Set3")
+  
+  
+  
+ggplot(ind_data)+aes(x=Countries)+
+geom_bar(aes(fill=Local),position=position_dodge2(preserve = "single"))+labs(title="(b)")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+  scale_fill_brewer(palette="Set3")
+
+ggplot(ind_data)+aes(x=Countries)+
+geom_bar(width=.75,aes(fill=Sector),position=position_dodge2(preserve = "single"))+labs(title="(c)")+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+  scale_fill_brewer(palette="Set3")
+
+
+ggplot(ind_data)+aes(x=Sector)+
+geom_bar(aes(fill=Local),position=position_dodge2(preserve = "single"))+labs(title="(d)")+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+  scale_fill_brewer(palette="Set3")
+
+```
+
+This shows that Country_01 has highest frequency of accidents in the time period of the dataset followed by country_2 and then country_3. We can see that country 1 has also the highest number of mining locations and highest number of mining related accidents. This gives us the interplay of three variables number of factories, sectors and the total number of accidents.
+
+\newpage
+
+# Accidents according to Gender
+
+Now let us look at how the Gender of the employees intertwine with other factors.
+
+-   Graph (a) shows the frequency of accidents based only on Gender
+
+-   Graph (b) shows the Sector wise frequency of accidents grouped by Gender
+
+-   Graph (c) shows the Country wise frequency of accidents grouped by Gender
+
+-   Graph (d) shows the Level of accidents grouped by Gender
+
+-   Graph (e) shows the potential level of accidents grouped by Gender
+
+```{r}
+ggplot(ind_data)+aes(x=Gender)+geom_bar(stat='count', width=0.5, aes(fill=Gender))+
+  labs(title="(a)")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+  scale_fill_brewer(palette="Set3")
+
+
+
+ggplot(ind_data)+aes(x=Gender)+
+geom_bar(aes(fill=Sector),position=position_dodge2(preserve = "single"))+labs(title="(b)")+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+  scale_fill_brewer(palette="Set3")
+
+
+ggplot(ind_data)+aes(x=Gender)+
+geom_bar(aes(fill=Countries),position=position_dodge2(preserve = "single"))+labs(title="(c)")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+  scale_fill_brewer(palette="Set3")
+
+ggplot(ind_data)+aes(x=Gender)+
+geom_bar(width=.9,aes(fill=Level),position=position_dodge2(preserve = "single"))+labs(title="(d)")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+  scale_fill_brewer(palette="Set3")
+
+ggplot(ind_data)+aes(x=Gender)+
+geom_bar(aes(fill=Potential.Level),position=position_dodge2(preserve = "single"))+labs(title="(e)")+
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+  scale_fill_brewer(palette="Set3")
+
+```
+
+These graphs can be interpreted in two ways:
+
+1.  The accidents' frequency of each Gender is highly correlated with the respective Gender's employment in the respective countries, sector and potential injury level of the jobs. Thus, we can infer from the graphs that female labour participation is very low in these factories and industries.
+
+2.  The men are careless and prone to accidents.
+
+Given the state of our world and given that IHM Stefanini is a Latin America based company the case is likely to be the first one. The reason being that female Labour participation is naturally low in developing countries.
+
+# Conclusion
+
+This is an interesting data set displaying various trends in industries and the company IHM Stefanini in particular. A visual analysis such as this one helps us understand the various factors at at play and how they are related. To dive deeper into the visual analysis of the variables, a dashboard could be built to understand the trends in a comprehensive manner.
