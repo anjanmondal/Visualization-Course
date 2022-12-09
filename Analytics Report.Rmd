@@ -5,6 +5,7 @@ author:
 - MDS202208
 date: "`r Sys.Date()`"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
 subtitle: Visualisation Analytics Report
@@ -17,7 +18,8 @@ library("dplyr")
 library(ggplot2)
 library(RColorBrewer)
 library(gridExtra)
-ind_data=read.csv("F:/Projects/IHM/IHMStefanini_industrial_safety_and_health_database.csv")
+
+ind_data=read.csv("IHMStefanini_industrial_safety_and_health_database.csv")
 ind_data <- ind_data %>% 
         rename("Date" = "Data",
                "Sector" = "Industry.Sector",
@@ -144,3 +146,9 @@ Given the state of our world and given that IHM Stefanini is a Latin America bas
 # Conclusion
 
 This is an interesting data set displaying various trends in industries and the company IHM Stefanini in particular. A visual analysis such as this one helps us understand the various factors at at play and how they are related. To dive deeper into the visual analysis of the variables, a dashboard could be built to understand the trends in a comprehensive manner.
+
+# Further Work
+
+Youtube Link : https://www.youtube.com/watch?v=o75SPUQ8r3E
+
+Dashboard Link : https://wgzf45-anjan-mondal.shinyapps.io/Dashboard/
